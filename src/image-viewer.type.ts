@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, ImageURISource, Text, View, ViewStyle } from 'react-native';
+import { Image, ImageURISource, Text, View, ViewStyle, EasingFunction, Easing } from 'react-native';
 import { simpleStyle } from './image-viewer.style';
 
 interface IOnMove {
@@ -229,6 +229,8 @@ export class Props {
   };
 
   public menus?: ({ cancel, saveToLocal }: any) => React.ReactElement<any>;
+
+  public easingFunction?: EasingFunction = Easing.linear;
 }
 
 export class State {

@@ -59,7 +59,7 @@ export const simpleStyle: {
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 38,
+    bottom: 38,
     zIndex: 13,
     justifyContent: 'center',
     alignItems: 'center',

@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewStyle
+  ViewStyle,
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import styles from './image-viewer.style';
@@ -194,8 +194,9 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    Image.getSize(
+    Image.getSizeWithHeaders(
       image.url,
+      image.props.source.headers,
       (width: number, height: number) => {
         imageStatus.width = width;
         imageStatus.height = height;
@@ -307,7 +308,8 @@ export default class ImageViewer extends React.Component<Props, State> {
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
       duration: this.props.pageAnimateTime,
-      useNativeDriver: !!this.props.useNativeDriver
+      useNativeDriver: !!this.props.useNativeDriver,
+      easing: this.props.easingFunction
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) - 1;
@@ -341,7 +343,8 @@ export default class ImageViewer extends React.Component<Props, State> {
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
       duration: this.props.pageAnimateTime,
-      useNativeDriver: !!this.props.useNativeDriver
+      useNativeDriver: !!this.props.useNativeDriver,
+      easing: this.props.easingFunction
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) + 1;
@@ -588,7 +591,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     return (
       <Animated.View style={{ zIndex: 9 }}>
-        <Animated.View style={{ ...this.styles.container, opacity: this.fadeAnim }}>
+        <Animated.View style={{ ...this.styles.container, opacity: this.fadeAnim } as any}>
           {this!.props!.renderHeader!(this.state.currentShowIndex)}
 
           <View style={this.styles.arrowLeftContainer}>
@@ -602,13 +605,13 @@ export default class ImageViewer extends React.Component<Props, State> {
               <View>{this!.props!.renderArrowRight!()}</View>
             </TouchableWithoutFeedback>
           </View>
-
+          
           <Animated.View
             style={{
               ...this.styles.moveBox,
               transform: [{ translateX: this.positionX }],
               width: this.width * this.props.imageUrls.length
-            }}
+            } as any}
           >
             {ImageElements}
           </Animated.View>

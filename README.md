@@ -109,6 +109,10 @@ export default class App extends React.Component {
 | useNativeDriver        | boolean                                                                                | no       | Whether to animate using [`useNativeDriver`](https://reactnative.dev/docs/animations#using-the-native-driver)                                                                                                                        | `false`                                                   |
 | menus                  | function<br><br>`({cancel,saveToLocal}) => React.ReactElement<any>`                    | no       | Custom menus, with 2 methods:`cancel` to hide menus and `saveToLocal` to save image to camera
 | menuContext            | object<br><br>`{someKey: someValue}`                                                   | no       | Custom menu context.                              | `{ saveToLocal: 'save to the album', cancel: 'cancel' }`
+| onGoNextFail | function<br><br>`(index?: number => void` | no | function to run when going past the final index | `() => {}`
+| onGoBackFail | function<br><br>`(index?: number => void` | no | function to run when going before first index | `() => {}`
+| nextTransactionCard |  function<br><br>`() => React.ReactElement<any>` | no | custom transition card | `() => null`
+
 ## Development pattern
 
 ### Step 1, run TS listener

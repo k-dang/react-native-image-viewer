@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  ViewStyle
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import styles from './image-viewer.style';
@@ -87,7 +87,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     // 给 imageSizes 塞入空数组
     const imageSizes: IImageSize[] = [];
-    nextProps.imageUrls.forEach(imageUrl => {
+    nextProps.imageUrls.forEach((imageUrl) => {
       imageSizes.push({
         width: imageUrl.width || 0,
         height: imageUrl.height || 0,
@@ -172,6 +172,11 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
+    // transition card skip
+    if (image.isNextTransactionCard) {
+      return;
+    }
+
     // 是否加载完毕了图片大小
     const sizeLoaded = false;
     // 是否加载完毕了图片
@@ -196,7 +201,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     Image.getSizeWithHeaders(
       image.url,
-      image.props.source.headers,
+      image.props!.source!.headers,
       (width: number, height: number) => {
         imageStatus.width = width;
         imageStatus.height = height;
@@ -298,6 +303,11 @@ export default class ImageViewer extends React.Component<Props, State> {
     if (this.state.currentShowIndex === 0) {
       // 回到之前的位置
       this.resetPosition.call(this);
+
+      // tried to swipe before index 0 should call a function here
+      if (this.props.onGoBackFail) {
+        this.props.onGoBackFail();
+      }
       return;
     }
 
@@ -333,6 +343,10 @@ export default class ImageViewer extends React.Component<Props, State> {
     if (this.state.currentShowIndex === this.props.imageUrls.length - 1) {
       // 回到之前的位置
       this.resetPosition.call(this);
+      // tried to swipe past should call a function here
+      if (this.props.onGoNextFail) {
+        this.props.onGoNextFail(this.state.currentShowIndex);
+      }
       return;
     }
 
@@ -494,6 +508,19 @@ export default class ImageViewer extends React.Component<Props, State> {
         </ImageZoom>
       );
 
+      if (image.isNextTransactionCard) {
+        return (
+          <Wrapper
+            key={index}
+            style={this.styles.modalContainer}
+            imageWidth={screenWidth}
+            imageHeight={screenHeight}
+          >
+            {this.props!.nextTransactionCard!()}
+          </Wrapper>
+        );
+      }
+
       switch (imageInfo.status) {
         case 'loading':
           return (
@@ -541,7 +568,7 @@ export default class ImageViewer extends React.Component<Props, State> {
           return (
             <ImageZoom
               key={index}
-              ref={el => (this.imageRefs[index] = el)}
+              ref={(el) => (this.imageRefs[index] = el)}
               cropWidth={this.width}
               cropHeight={this.height}
               maxOverflow={this.props.maxOverflow}
@@ -605,13 +632,15 @@ export default class ImageViewer extends React.Component<Props, State> {
               <View>{this!.props!.renderArrowRight!()}</View>
             </TouchableWithoutFeedback>
           </View>
-          
+
           <Animated.View
-            style={{
-              ...this.styles.moveBox,
-              transform: [{ translateX: this.positionX }],
-              width: this.width * this.props.imageUrls.length
-            } as any}
+            style={
+              {
+                ...this.styles.moveBox,
+                transform: [{ translateX: this.positionX }],
+                width: this.width * this.props.imageUrls.length
+              } as any
+            }
           >
             {ImageElements}
           </Animated.View>

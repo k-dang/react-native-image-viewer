@@ -98,7 +98,7 @@ export class Props {
    */
   public pageAnimateTime?: number = 100;
 
-  /** 
+  /**
    * 是否启用原生动画驱动
    * Whether to use the native code to perform animations.
    */
@@ -231,6 +231,24 @@ export class Props {
   public menus?: ({ cancel, saveToLocal }: any) => React.ReactElement<any>;
 
   public easingFunction?: EasingFunction = Easing.linear;
+
+  /**
+   * function that fires when user tries to swipe past last index
+   */
+  public onGoNextFail?: (index?: number) => void = () => {
+    //
+  };
+
+  /**
+   * function that fires when user tries to swipe before first index
+   */
+  public onGoBackFail?: () => void = () => {
+    //
+  };
+
+  public nextTransactionCard?: () => React.ReactElement<any> = () => {
+    return null as any;
+  };
 }
 
 export class State {
@@ -300,6 +318,10 @@ export interface IImageInfo {
    * 初始是否不超高 TODO:
    */
   freeWidth?: boolean;
+  /**
+   * is transction card
+   */
+  isNextTransactionCard?: boolean;
 }
 
 export interface IImageSize {

@@ -67,11 +67,11 @@ export default class ImageViewer extends React.Component<Props, State> {
       // this.jumpToCurrentImage();
 
       // 显示动画
-      Animated.timing(this.fadeAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: !!this.props.useNativeDriver
-      }).start();
+      // Animated.timing(this.fadeAnim, {
+      //   toValue: 1,
+      //   duration: 200,
+      //   useNativeDriver: !!this.props.useNativeDriver
+      // }).start();
     }
   }
 
@@ -110,7 +110,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         // 显示动画
         Animated.timing(this.fadeAnim, {
           toValue: 1,
-          duration: 200,
+          duration: this.props.pageInitialAnimateTime,
           useNativeDriver: !!nextProps.useNativeDriver
         }).start();
       }

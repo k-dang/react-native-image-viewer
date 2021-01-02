@@ -249,6 +249,8 @@ export class Props {
   public nextTransactionCard?: () => React.ReactElement<any> = () => {
     return null as any;
   };
+
+  public pageInitialAnimateTime?: number = 1000;
 }
 
 export class State {

@@ -158,6 +158,10 @@ export class Props {
     currentIndex?: number,
     allSize?: number
   ) => {
+    if (allSize != null && currentIndex === allSize + 1) {
+      return null as any;
+    }
+
     return React.createElement(
       View,
       { style: simpleStyle.count },

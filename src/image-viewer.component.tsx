@@ -301,13 +301,11 @@ export default class ImageViewer extends React.Component<Props, State> {
    */
   public goBack = () => {
     if (this.state.currentShowIndex === 0) {
-      // 回到之前的位置
-      this.resetPosition.call(this);
-
       // tried to swipe before index 0 should call a function here
       if (this.props.onGoBackFail) {
         this.props.onGoBackFail();
       }
+      this.resetPosition.call(this);
       return;
     }
 
@@ -341,12 +339,22 @@ export default class ImageViewer extends React.Component<Props, State> {
    */
   public goNext = () => {
     if (this.state.currentShowIndex === this.props.imageUrls.length - 1) {
-      // 回到之前的位置
-      this.resetPosition.call(this);
       // tried to swipe past should call a function here
       if (this.props.onGoNextFail) {
+        this.positionXNumber = !I18nManager.isRTL
+          ? this.standardPositionX - this.width
+          : this.standardPositionX + this.width;
+        this.standardPositionX = this.positionXNumber;
+        Animated.timing(this.positionX, {
+          toValue: this.positionXNumber,
+          duration: this.props.pageAnimateTime,
+          useNativeDriver: !!this.props.useNativeDriver,
+          easing: this.props.easingFunction
+        }).start();
         this.props.onGoNextFail(this.state.currentShowIndex);
+        return;
       }
+      this.resetPosition.call(this);
       return;
     }
 
@@ -510,12 +518,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
       if (image.isNextTransitionCard) {
         return (
-          <Wrapper
-            key={index}
-            style={this.styles.modalContainer}
-            imageWidth={screenWidth}
-            imageHeight={screenHeight}
-          >
+          <Wrapper key={index} style={this.styles.modalContainer} imageWidth={screenWidth} imageHeight={screenHeight}>
             {this.props!.nextTransitionCard!()}
           </Wrapper>
         );

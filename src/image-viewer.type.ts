@@ -250,11 +250,11 @@ export class Props {
     //
   };
 
-  public nextTransactionCard?: () => React.ReactElement<any> = () => {
+  public pageInitialAnimateTime?: number = 1000;
+
+  public nextTransitionCard?: () => React.ReactElement<any> = () => {
     return null as any;
   };
-
-  public pageInitialAnimateTime?: number = 1000;
 }
 
 export class State {
@@ -325,9 +325,9 @@ export interface IImageInfo {
    */
   freeWidth?: boolean;
   /**
-   * is transction card
+   * is next transction card
    */
-  isNextTransactionCard?: boolean;
+  isNextTransitionCard?: boolean;
 }
 
 export interface IImageSize {

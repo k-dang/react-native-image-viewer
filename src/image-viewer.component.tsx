@@ -173,7 +173,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     }
 
     // transition card skip
-    if (image.isNextTransactionCard) {
+    if (image.isNextTransitionCard) {
       return;
     }
 
@@ -508,7 +508,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         </ImageZoom>
       );
 
-      if (image.isNextTransactionCard) {
+      if (image.isNextTransitionCard) {
         return (
           <Wrapper
             key={index}
@@ -516,7 +516,7 @@ export default class ImageViewer extends React.Component<Props, State> {
             imageWidth={screenWidth}
             imageHeight={screenHeight}
           >
-            {this.props!.nextTransactionCard!()}
+            {this.props!.nextTransitionCard!()}
           </Wrapper>
         );
       }

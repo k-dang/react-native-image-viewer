@@ -73,10 +73,10 @@ export default class App extends React.Component {
 
 ### Props
 
-| parameter              | type                                                                                   | required | description                                                                                                                                                                                                                          | default                                                   |
+| parameter | type | required | description | default |
 | :--------------------- | :------------------------------------------------------------------------------------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------- |
-| imageUrls              | array                                                                                  | yes      | Image Source                                                                                                                                                                                                                         |                                                           |
-| enableImageZoom        | boolean                                                                                | no       | Enable image zoom                                                                                                                                                                                                                    | `true`                                                    |
+| imageUrls | array | yes | Image Source |
+| enableImageZoom | boolean | no | Enable image zoom | `true` |
 | onShowModal            | function<br><br>`(content?: JSX.Element) => void`                                      | no       | The callback for show modal                                                                                                                                                                                                          | `() => {}`                                                |
 | onCancel               | function<br><br>`() => void`                                                           | no       | The callback for cancel modal                                                                                                                                                                                                        | `() => {}`                                                |
 | flipThreshold          | number                                                                                 | no       | Swipe threshold of the next page                                                                                                                                                                                                     | `80`                                                      |
@@ -112,7 +112,8 @@ export default class App extends React.Component {
 | onGoNextFail | function<br><br>`(index?: number => void` | no | function to run when going past the final index | `() => {}`
 | onGoBackFail | function<br><br>`(index?: number => void` | no | function to run when going before first index | `() => {}`
 | nextTransitionCard |  function<br><br>`() => React.ReactElement<any>` | no | custom transition card | `() => null`
-| pageInitialAnimateTime | number | no | Set the animation time for initial page load | `1000`
+| pageInitialAnimateTime | number | no | Set the animation time for initial page load | `1000``
+| failImageRender | `() => React.ReactElement<any>` | no | element to render when image fails to load | `() => null`
 
 ## Development pattern
 
@@ -138,3 +139,9 @@ Then, scan the QR, use your [expo app](https://expo.io./).
 ### Dependence
 
 Depend on `react-native-image-pan-zoom`: https://github.com/ascoders/react-native-image-zoom
+
+### Packing artifacts for deployment
+
+```bash
+npm pack
+```

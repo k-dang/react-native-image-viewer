@@ -11,28 +11,29 @@ interface IOnMove {
 }
 
 export class Props {
+
   /**
-   * 是否显示
+   * unused?
    */
   public show?: boolean = false;
 
   /**
-   * 图片数组
+   * array of IImageInfo to be displayed
    */
   public imageUrls: IImageInfo[] = [];
 
   /**
-   * 滑动到下一页的X阈值
+   * x threshold for sliding to next page
    */
   public flipThreshold?: number = 80;
 
   /**
-   * 当前页能滑到下一页X位置最大值
+   * max position before sliding to next page
    */
   public maxOverflow?: number = 300;
 
   /**
-   * 初始显示第几张图
+   * image index to show initially
    */
   public index?: number = 0;
 
@@ -42,7 +43,7 @@ export class Props {
   public failImageSource?: IImageInfo = undefined;
 
   /**
-   * 背景颜色
+   * background color of viewer
    */
   public backgroundColor?: string = 'black';
 
@@ -57,12 +58,12 @@ export class Props {
   public menuContext?: any = { saveToLocal: 'save to the album', cancel: 'cancel' };
 
   /**
-   * 是否开启长按保存到本地的功能
+   * allow save to local by long press
    */
   public saveToLocalByLongPress?: boolean = true;
 
   /**
-   * 是否允许缩放图片
+   * allow image zoom
    */
   public enableImageZoom?: boolean = true;
 
@@ -89,45 +90,43 @@ export class Props {
   public maxScale?: number;
 
   /**
-   * 是否预加载图片
+   * allow image preloading
    */
   public enablePreload?: boolean = false;
 
   /**
-   * 翻页时的动画时间
+   * animation time to turn pages
    */
   public pageAnimateTime?: number = 100;
 
   /**
-   * 是否启用原生动画驱动
    * Whether to use the native code to perform animations.
    */
   public useNativeDriver?: boolean = false;
 
   /**
-   * 长按图片的回调
+   * callback for long press on image
    */
   public onLongPress?: (image?: IImageInfo) => void = () => {
     //
   };
 
   /**
-   * 单击回调
+   * callback for click on image
    */
   public onClick?: (close?: () => any, currentShowIndex?: number) => void = () => {
     //
   };
 
   /**
-   * 双击回调
+   * callback for double click
    */
   public onDoubleClick?: (close?: () => any) => void = () => {
     //
   };
 
   /**
-   * 图片保存到本地方法，如果写了这个方法，就不会调取系统默认方法
-   * 针对安卓不支持 saveToCameraRoll 远程图片，可以在安卓调用此回调，调用安卓原生接口
+   * override method for saving picture locally 
    */
   public onSave?: (url: string) => void = () => {
     //
@@ -138,21 +137,21 @@ export class Props {
   };
 
   /**
-   * 自定义头部
+   * custom header component render
    */
   public renderHeader?: (currentIndex?: number) => React.ReactElement<any> = () => {
     return null as any;
   };
 
   /**
-   * 自定义尾部
+   * custom footer component render
    */
   public renderFooter?: (currentIndex: number) => React.ReactElement<any> = () => {
     return null as any;
   };
 
   /**
-   * 自定义计时器
+   * custom component for pagination
    */
   public renderIndicator?: (currentIndex?: number, allSize?: number) => React.ReactElement<any> = (
     currentIndex?: number,
@@ -177,28 +176,28 @@ export class Props {
   };
 
   /**
-   * 自定义左翻页按钮
+   * custom left arrow component
    */
   public renderArrowLeft?: () => React.ReactElement<any> = () => {
     return null as any;
   };
 
   /**
-   * 自定义右翻页按钮
+   * custom right arrow component
    */
   public renderArrowRight?: () => React.ReactElement<any> = () => {
     return null as any;
   };
 
   /**
-   * 弹出大图的回调
+   * callback for modal pop up
    */
   public onShowModal?: (content?: any) => void = () => {
     //
   };
 
   /**
-   * 取消看图的回调
+   * callback for canceling image viewing
    */
   public onCancel?: () => void = () => {
     //
@@ -212,21 +211,21 @@ export class Props {
   };
 
   /**
-   * 渲染loading元素
+   * react element to render while image is loading
    */
   public loadingRender?: () => React.ReactElement<any> = () => {
     return null as any;
   };
 
   /**
-   * 保存到相册的回调
+   * callback for saving to album
    */
   public onSaveToCamera?: (index?: number) => void = () => {
     //
   };
 
   /**
-   * 当图片切换时触发
+   * callback when image is switched
    */
   public onChange?: (index?: number) => void = () => {
     //
@@ -250,21 +249,34 @@ export class Props {
     //
   };
 
+  /**
+   * animation time for initial page load
+   */
   public pageInitialAnimateTime?: number = 1000;
 
+  /**
+   * react element to use as a transition card
+   */
   public nextTransitionCard?: () => React.ReactElement<any> = () => {
+    return null as any;
+  };
+
+  /**
+   * react element to show when an image fails to load
+   */
+  public failImageRender?: () => React.ReactElement<any> = () => {
     return null as any;
   };
 }
 
 export class State {
   /**
-   * 是否显示
+   * unused?
    */
   public show?: boolean = false;
 
   /**
-   * 当前显示第几个
+   * which index is currently shown
    */
   public currentShowIndex?: number = 0;
 
@@ -274,42 +286,50 @@ export class State {
   public prevIndexProp?: number = 0;
 
   /**
-   * 图片拉取是否完毕了
+   * is image loaded
    */
   public imageLoaded?: boolean = false;
 
   /**
-   * 图片长宽列表
+   * array holding image sizes
    */
   public imageSizes?: IImageSize[] = [];
 
   /**
-   * 是否出现功能菜单
+   * allow menu to show
    */
   public isShowMenu?: boolean = false;
 }
 
 export interface IImageInfo {
   url: string;
+
   /**
-   * 没有的话会自动拉取
+   * width of image
+   * if not provided, will try fetching the sizes via
+   * image getSizeWithHeaders 
    */
   width?: number;
+
   /**
-   * 没有的话会自动拉取
+   * height of image
+   * if not provided, will try fetching the sizes via
+   * image getSizeWithHeaders 
    */
   height?: number;
+
   /**
-   * 图片字节大小(kb为单位)
+   * image size in kb
    */
   sizeKb?: number;
   /**
-   * 原图字节大小(kb为单位)
-   * 如果设置了这个字段,并且有原图url,则显示查看原图按钮
+   * original image size 
+   * if originSizeKb & originUrl is set
+   * the view original image button will be displayed
    */
   originSizeKb?: number;
   /**
-   * 原图url地址
+   * original image url
    */
   originUrl?: string;
   /**
@@ -317,11 +337,11 @@ export interface IImageInfo {
    */
   props?: any;
   /**
-   * 初始是否不超高 TODO:
+   * TODO
    */
   freeHeight?: boolean;
   /**
-   * 初始是否不超高 TODO:
+   * TODO
    */
   freeWidth?: boolean;
   /**
@@ -333,6 +353,6 @@ export interface IImageInfo {
 export interface IImageSize {
   width: number;
   height: number;
-  // 图片加载状态
-  status: 'loading' | 'success' | 'fail';
+
+  status: 'loading' | 'success' | 'loadSuccess' | 'fail';
 }

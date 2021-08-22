@@ -87,10 +87,11 @@ export default class ImageViewer extends React.Component<Props, State> {
     // store image sizes to be called later
     const imageSizes: IImageSize[] = [];
     nextProps.imageUrls.forEach((imageUrl) => {
+      const realStatus = imageUrl.isNextTransitionCard || (imageUrl.width && imageUrl.height) ? 'success' : 'loading';
       imageSizes.push({
         width: imageUrl.width || 0,
         height: imageUrl.height || 0,
-        status: 'loading'
+        status: realStatus
       });
     });
 
@@ -115,6 +116,7 @@ export default class ImageViewer extends React.Component<Props, State> {
       }
     );
   }
+
   /**
    * reset Image scale and position
    */
@@ -155,6 +157,8 @@ export default class ImageViewer extends React.Component<Props, State> {
 
       const imageSizes = this!.state!.imageSizes!.slice();
       imageSizes[index] = imageStatus;
+
+      // TODO problematic update during state transition
       this.setState({ imageSizes });
     };
 
@@ -163,15 +167,17 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    // if width & height valid, set the image size
-    if (this!.state!.imageSizes![index].width > 0 && this!.state!.imageSizes![index].height > 0) {
-      imageStatus.status = 'success';
-      saveImageSize();
+    // incase skip fails transition card skip
+    if (image.isNextTransitionCard) {
       return;
     }
 
-    // transition card skip
-    if (image.isNextTransitionCard) {
+    // unsure why do this before
+    // if width & height valid, set the image size
+    if (this!.state!.imageSizes![index].width > 0 && this!.state!.imageSizes![index].height > 0) {
+      // we are updating the status for a preload
+      imageStatus.status = 'success';
+      saveImageSize();
       return;
     }
 
@@ -184,6 +190,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     }
 
     if (image.width && image.height) {
+      // does not work with headers
       if (this.props.enablePreload && imageLoaded === false) {
         Image.prefetch(image.url);
       }
@@ -194,6 +201,7 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
+    // only called if width & height are not provided
     Image.getSizeWithHeaders(
       image.url,
       image.props!.source!.headers,
@@ -218,7 +226,6 @@ export default class ImageViewer extends React.Component<Props, State> {
       }
     );
   }
-
 
   public preloadImage = (index: number) => {
     if (index < this.state.imageSizes!.length) {
@@ -495,6 +502,13 @@ export default class ImageViewer extends React.Component<Props, State> {
         );
       }
 
+      // reset image state
+      const setSuccess = () => {
+        const imageSizes = [...this.state.imageSizes!];
+        imageSizes[index].status = 'success';
+        this.setState({ imageSizes });
+      };
+
       switch (imageInfo.status) {
         case 'loading':
           return (
@@ -530,13 +544,13 @@ export default class ImageViewer extends React.Component<Props, State> {
             const imageSizes = [...this.state.imageSizes!];
             imageSizes[index].status = 'loadSuccess';
             this.setState({ imageSizes });
-          }
+          };
 
           image.props.onError = () => {
             const imageSizes = [...this.state.imageSizes!];
             imageSizes[index].status = 'fail';
             this.setState({ imageSizes });
-          }
+          };
 
           if (typeof image.props.source === 'number') {
             // source = require(..), doing nothing
@@ -549,9 +563,12 @@ export default class ImageViewer extends React.Component<Props, State> {
               ...image.props.source
             };
           }
+
+          // fine as long as no state changes here
           if (this.props.enablePreload) {
             this.preloadImage(this.state.currentShowIndex || 0);
           }
+
           return (
             <ImageZoom
               key={index}
@@ -602,7 +619,9 @@ export default class ImageViewer extends React.Component<Props, State> {
               imageWidth={screenWidth}
               imageHeight={screenHeight}
             >
-              <View style={this.styles.loadingContainer}>{this!.props!.failImageRender!()}</View>
+              <View style={this.styles.loadingContainer}>
+                <TouchableHighlight onPress={setSuccess}>{this!.props!.failImageRender!()}</TouchableHighlight>
+              </View>
             </Wrapper>
           );
       }

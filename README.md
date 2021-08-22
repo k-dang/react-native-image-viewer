@@ -112,7 +112,7 @@ export default class App extends React.Component {
 | onGoNextFail | function<br><br>`(index?: number => void` | no | function to run when going past the final index | `() => {}`
 | onGoBackFail | function<br><br>`(index?: number => void` | no | function to run when going before first index | `() => {}`
 | nextTransitionCard |  function<br><br>`() => React.ReactElement<any>` | no | custom transition card | `() => null`
-| pageInitialAnimateTime | number | no | Set the animation time for initial page load | `1000``
+| pageInitialAnimateTime | number | no | Set the animation time for initial page load | `1000`
 | failImageRender | `() => React.ReactElement<any>` | no | element to render when image fails to load | `() => null`
 
 ## Development pattern
